@@ -112,56 +112,61 @@
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const text = `Welcome, Sherlock!\n\nYour previous visit wasn’t unnoticed. A trace was left behind.\n\nFind where your previous visit details are located. The truth is always in the details.`;
-            const typingContainer = document.querySelector(".typing");
-            const thunder = document.querySelector(".thunder");
-            const rainContainer = document.createElement('div');
-            rainContainer.classList.add('rain');
-            document.body.appendChild(rainContainer);
-            let index = 0;
-
-            const typingSound = new Audio('typing-sound.mp3'); 
-
-            function typeWriter() {
-                if (index < text.length) {
-                    const span = document.createElement("span");
-                    span.textContent = text.charAt(index);
-                    typingContainer.appendChild(span);
-
-                    typingSound.currentTime = 0; 
-                    typingSound.play();
-                    if (Math.random() > 0.8) {
-                        span.style.animation = `blink 1s infinite`;
-                    }
-                    index++;
-                    setTimeout(typeWriter, 50);
+        const text = `Welcome, Sherlock!\n\nYour previous visit wasn’t unnoticed. A trace was left behind.\n\nFind where your previous visit details are located. The truth is always in the details.`;
+        const typingContainer = document.querySelector(".typing");
+        const thunder = document.querySelector(".thunder");
+        const rainContainer = document.createElement('div');
+        rainContainer.classList.add('rain');
+        document.body.appendChild(rainContainer);
+        let index = 0;
+    
+        const typingSound = new Audio('typing-sound.mp3'); 
+    
+        function typeWriter() {
+            if (index < text.length) {
+                const span = document.createElement("span");
+                span.textContent = text.charAt(index);
+                typingContainer.appendChild(span);
+    
+                // Play typing sound immediately
+                typingSound.currentTime = 0; 
+                typingSound.play();
+    
+                if (Math.random() > 0.8) {
+                    span.style.animation = `blink 1s infinite`;
                 }
+    
+                index++;
+                setTimeout(typeWriter, 50);
             }
+        }
+    
+        function triggerThunder() {
+            thunder.style.animation = "thunderFlash 0.5s";
+            setTimeout(() => {
+                thunder.style.animation = "";
+            }, 500);
+            setTimeout(triggerThunder, Math.random() * 5000 + 3000); // Random interval between flashes
+        }
+    
+        function createRaindrops() {
+            const dropCount = 100; 
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement("div");
+                drop.classList.add("raindrop");
+                drop.style.left = Math.random() * 100 + "vw";
+                drop.style.animationDuration = Math.random() * 1 + 1 + "s";
+                drop.style.animationDelay = Math.random() * 2 + "s";
+                rainContainer.appendChild(drop);
+            }
+        }
+    
+        document.cookie = "next=/hiddenpage/; path=/";
+        typeWriter();
+        triggerThunder();
+        createRaindrops();
+    });
 
-            function triggerThunder() {
-                thunder.style.animation = "thunderFlash 0.5s";
-                setTimeout(() => {
-                    thunder.style.animation = "";
-                }, 500);
-                setTimeout(triggerThunder, Math.random() * 500 + 3000); // Random interval between flashes
-            }
-
-            function createRaindrops() {
-                const dropCount = 100; 
-                for (let i = 0; i < dropCount; i++) {
-                    const drop = document.createElement("div");
-                    drop.classList.add("raindrop");
-                    drop.style.left = Math.random() * 100 + "vw";
-                    drop.style.animationDuration = Math.random() * 1 + 1 + "s";
-                    drop.style.animationDelay = Math.random() * 2 + "s";
-                    rainContainer.appendChild(drop);
-                }
-            }
-            document.cookie = "next=/hiddenpage/; path=/";
-            typeWriter();
-            triggerThunder();
-            createRaindrops();
-        });
     </script>
 </head>
 <body>
