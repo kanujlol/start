@@ -7,19 +7,170 @@
     <link href="https://fonts.googleapis.com/css2?family=Cousine&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Cousine', monospace; /* Apply Cousine font to all text */
-            text-align: center;
+            font-family: 'Cousine', monospace;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background: radial-gradient(circle, #1b1b2f, #162447);
+            color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            padding: 50px 30px;
+            background: linear-gradient(145deg, #0f3460, #1a1a2e);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            max-width: 700px;
+            animation: fadeIn 1.5s ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+        .typing {
+            display: inline-block;
+            white-space: pre-wrap;
+            overflow: hidden;
+            font-size: 1.2em;
+            line-height: 1.8;
+            font-weight: 400;
+            text-align: left;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: url('https://i.imgur.com/8k7zD7w.png') repeat;
+            animation: rain 0.5s linear infinite;
+            opacity: 0.2;
+        }
+        .thunder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            animation: fall linear infinite;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes rain {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: 0 100%;
+            }
+        }
+        @keyframes thunderFlash {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        @keyframes fall {
+            from {
+                transform: translateY(-100%);
+                opacity: 0.8;
+            }
+            to {
+                transform: translateY(100%);
+                opacity: 0;
+            }
         }
     </style>
     <script>
-        document.cookie = "next=/hiddenpage/; path=/";
+        document.addEventListener("DOMContentLoaded", function () {
+            const text = `Welcome, Sherlock!\n\nYour previous visit wasn’t unnoticed. A trace was left behind.\n\nFind where your previous visit details are located. The truth is always in the details.`;
+            const typingContainer = document.querySelector(".typing");
+            const thunder = document.querySelector(".thunder");
+            const rainContainer = document.createElement('div');
+            rainContainer.classList.add('rain');
+            document.body.appendChild(rainContainer);
+            let index = 0;
+
+            const typingSound = new Audio('typing-sound.mp3'); 
+
+            function typeWriter() {
+                if (index < text.length) {
+                    const span = document.createElement("span");
+                    span.textContent = text.charAt(index);
+                    typingContainer.appendChild(span);
+
+                    typingSound.currentTime = 0; 
+                    typingSound.play();
+                    if (Math.random() > 0.8) {
+                        span.style.animation = `blink 1s infinite`;
+                    }
+                    index++;
+                    setTimeout(typeWriter, 50);
+                }
+            }
+
+            function triggerThunder() {
+                thunder.style.animation = "thunderFlash 0.5s";
+                setTimeout(() => {
+                    thunder.style.animation = "";
+                }, 500);
+                setTimeout(triggerThunder, Math.random() * 500 + 3000); // Random interval between flashes
+            }
+
+            function createRaindrops() {
+                const dropCount = 100; 
+                for (let i = 0; i < dropCount; i++) {
+                    const drop = document.createElement("div");
+                    drop.classList.add("raindrop");
+                    drop.style.left = Math.random() * 100 + "vw";
+                    drop.style.animationDuration = Math.random() * 1 + 1 + "s";
+                    drop.style.animationDelay = Math.random() * 2 + "s";
+                    rainContainer.appendChild(drop);
+                }
+            }
+            document.cookie = "next=/hiddenpage/; path=/";
+            typeWriter();
+            triggerThunder();
+            createRaindrops();
+        });
     </script>
 </head>
 <body>
-    <h1>Welcome to the Mystery!</h1>
-    <p>The answer lies in the shadows. Look deeper.</p>
+    <div class="thunder"></div>
+    <div class="container">
+        <div class="typing"></div>
+        <div class="footer">
+            <p>&copy; 2025 Mystery Chronicles</p>
+        </div>
+    </div>
 </body>
 </html>
